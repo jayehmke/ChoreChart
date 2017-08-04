@@ -6,7 +6,6 @@ import { Actions as NavigationActions } from 'react-native-router-flux'
 import styles from './Styles/DrawerContentStyles'
 import { Images } from '../Themes'
 
-
 class DrawerContent extends Component {
 
   componentDidMount () {
@@ -28,11 +27,11 @@ class DrawerContent extends Component {
       <View style={styles.container}>
         <Image source={Images.logoDark} style={styles.logo} />
         <Content>
-          <ListItem onPress={()=> {NavigationActions.listViewExample();this.context.drawer.close()}}>
-            <Text>List example</Text>
+          <ListItem onPress={() => { NavigationActions.goalsList(); this.context.drawer.close() }}>
+            <Text>Goals</Text>
           </ListItem>
-          <ListItem onPress={()=> {NavigationActions.cardExample();this.context.drawer.close()}}>
-            <Text>Card example</Text>
+          <ListItem onPress={() => { NavigationActions.cardExample(); this.context.drawer.close() }}>
+            <Text>Calendar</Text>
           </ListItem>
         </Content>
       </View>

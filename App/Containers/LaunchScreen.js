@@ -1,5 +1,5 @@
 import React from 'react'
-import { ScrollView, Text, Image, View } from 'react-native'
+import { ScrollView, Text, Image, View, AsyncStorage } from 'react-native'
 import { Button, Text as NBText } from 'native-base'
 import { Images } from '../Themes'
 
@@ -7,6 +7,14 @@ import { Images } from '../Themes'
 import styles from './Styles/LaunchScreenStyles'
 
 export default class LaunchScreen extends React.Component {
+
+  async setHasOpened () {
+    try {
+      await AsyncStorage.setItem('@ChoreChart:hasOpened', 'true')
+    } catch (error) {
+      // Error saving data
+    }
+  }
 
   render () {
     return (
@@ -23,7 +31,7 @@ export default class LaunchScreen extends React.Component {
               {"This probably isn't what your app is going to look like. Unless your designer handed you this screen and, in that case, congrats! You're ready to ship. For everyone else, this is where you'll see a live preview of your fully functioning app using Ignite."}
             </Text>
           </View>
-          <Button style={{alignSelf: 'center'}} onPress={()=> this.context.drawer.open()}>
+          <Button style={{alignSelf: 'center'}} onPress={() => { this.context.drawer.open(); this.setHasOpened() }}>
             <NBText>Explore!</NBText>
           </Button>
         </ScrollView>

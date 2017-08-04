@@ -7,14 +7,15 @@ import {
   TouchableOpacity,
   Image,
   Keyboard,
-  LayoutAnimation
+  LayoutAnimation,
+  AsyncStorage
 } from 'react-native'
 import { connect } from 'react-redux'
 import Styles from './Styles/LoginScreenStyles'
 import {Images, Metrics} from '../Themes'
 import LoginActions from '../Redux/LoginRedux'
 import { Actions as NavigationActions } from 'react-native-router-flux'
-import { Button, Text as NBText, Contant, Form, Item, Input, Label } from 'native-base'
+import { Button, Text as NBText, Content, Form, Item, Input, Label } from 'native-base'
 
 class LoginScreen extends React.Component {
 
@@ -52,6 +53,18 @@ class LoginScreen extends React.Component {
     // TODO: Revisit this if Android begins to support - https://github.com/facebook/react-native/issues/3468
     this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this.keyboardDidShow)
     this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this.keyboardDidHide)
+    this.checkIsLoggedIn()
+  }
+
+  async checkIsLoggedIn () {
+    try {
+      const value = await AsyncStorage.getItem('@ChoreChart:isLoggedIn')
+      if (value === 'true') {
+        NavigationActions.launchScreen()
+      }
+    } catch (error) {
+      // Error retrieving data
+    }
   }
 
   componentWillUnmount () {
@@ -83,7 +96,10 @@ class LoginScreen extends React.Component {
     // this.isAttempting = true
     // attempt a login - a saga is listening to pick it up from here.
     // this.props.attemptLogin(username, password);
-    NavigationActions.launchScreen();
+    this.setIsLoggedIn()
+      .then(() => {
+        NavigationActions.launchScreen()
+      })
   }
 
   handleChangeUsername = (text) => {
@@ -92,6 +108,14 @@ class LoginScreen extends React.Component {
 
   handleChangePassword = (text) => {
     this.setState({ password: text })
+  }
+
+  async setIsLoggedIn () {
+    try {
+      await AsyncStorage.setItem('@ChoreChart:isLoggedIn', 'true')
+    } catch (error) {
+      // Error saving data
+    }
   }
 
   render () {
